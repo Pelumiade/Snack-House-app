@@ -21,3 +21,6 @@ urlpatterns = [
     path('shipping_methods/', ShippingMethodOptionsView.as_view(), name='shipping-methods'),
     path('make_payment/', PaymentView.as_view(), name='make-payment'),
 ]
+
+
+
