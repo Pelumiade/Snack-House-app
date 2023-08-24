@@ -3,7 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import SignUpSerializer, SignInSerializer, VerifyCodeSerializer, ForgotPasswordSerializer, SetNewPasswordSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import GenericAPIView
 from .tasks import send_email
 import random
@@ -11,20 +10,9 @@ from .models import User
 from rest_framework.generics import CreateAPIView
 
 
-# class SignUpAPIView(CreateAPIView):
-#     serializer_class = SignUpSerializer
-    
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-        
-#         if serializer.is_valid():
-#             user = serializer.save()
-#             return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
-        
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class SignUpAPIView(CreateAPIView):
     serializer_class = SignUpSerializer
+    permission_classes = [] 
     
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -34,31 +22,7 @@ class SignUpAPIView(CreateAPIView):
             return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
-# class SignInAPIView(TokenObtainPairView):
-#     serializer_class = SignInSerializer
 
-#     def post(self, request, *args, **kwargs):
-#         serializer=self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data
-#         token = RefreshToken.for_user(user)
-#         return super().post(request, *args, **kwargs)
-    
-# class SignInAPIView(TokenObtainPairView):
-#     serializer_class = SignInSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data
-#         token = RefreshToken.for_user(user)
-
-    
-#         response_data = {
-#             'refresh': str(token),
-#             'access': str(token.access_token),
-#         }
-#         return Response(response_data)
     
 class SignInAPIView(TokenObtainPairView):
     serializer_class = SignInSerializer
@@ -72,6 +36,7 @@ class SignInAPIView(TokenObtainPairView):
         custom_payload = serializer.validated_data
 
         return Response(custom_payload)
+    
         
 class ForgotPasswordAPIView(GenericAPIView):
     serializer_class = ForgotPasswordSerializer

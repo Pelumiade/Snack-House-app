@@ -1,6 +1,6 @@
 from rest_framework import generics, status
 from .models import Product, CartItem, Order, ShippingMethod, DeliveryDetails, Payment
-from .serializers import ProductSerializer, CartItemSerializer, PaymentSerializer, DeliveryDetailsSerializer, ShippingMethodSerializer, OrderSerializer, CartTotalSerializer
+from .serializers import ProductSerializer, CartItemSerializer, PaymentSerializer, DeliveryDetailsSerializer, ShippingMethodSerializer, OrderSerializer, CartTotalSerializer, SubscriptionSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -122,7 +122,7 @@ class ShippingMethodOptionsView(APIView):
 
     def get(self, request, *args, **kwargs):
         shipping_methods = ShippingMethod.objects.all()
-        
+
         serializer = ShippingMethodSerializer(shipping_methods, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -138,3 +138,26 @@ class PaymentView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+# class SubscribeAPIView(APIView):
+#     def post(self, request, *args, **kwargs):
+#         serializer = SubscriptionSerializer(data=request.data)
+#         if serializer.is_valid():
+#             email = serializer.validated_data['email']
+            
+#             # Save the email to your database
+#             # Assuming you have a Subscription model to store emails
+#             Subscription.objects.create(email=email)
+            
+#             # Send a confirmation email
+#             subject = 'Subscription Confirmation'
+#             message = f'Thank you for subscribing to our newsletter! You will receive updates at {email}.'
+#             from_email = 'noreply@example.com'
+#             recipient_list = [email]
+#             send_mail(subject, message, from_email, recipient_list, fail_silently=True)
+            
+#             return Response({'message': 'Subscription successful. Thank you for subscribing!'}, status=status.HTTP_201_CREATED)
+        
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

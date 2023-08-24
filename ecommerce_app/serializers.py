@@ -61,3 +61,9 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class CartTotalSerializer(serializers.Serializer):
     cart_total = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+
+class SubscriptionSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    
+    
