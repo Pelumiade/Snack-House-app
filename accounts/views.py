@@ -19,7 +19,7 @@ class SignUpAPIView(CreateAPIView):
         
         if serializer.is_valid():
             user = serializer.save()
-            return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Account Succesfully Created'}, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
@@ -32,9 +32,8 @@ class SignInAPIView(TokenObtainPairView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
-        # Get the custom payload from the serializer
+    
         custom_payload = serializer.validated_data
-
         return Response(custom_payload)
     
         
