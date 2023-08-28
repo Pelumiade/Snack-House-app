@@ -14,7 +14,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartItem
-        #fields = ('product', 'quantity') 
+        #fields = ('product', 'quantity,') 
         fields = ('product', 'quantity', 'item_price')  
 
 
@@ -65,7 +65,7 @@ class CartTotalSerializer(serializers.Serializer):
 
 class WishlistAddSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
-    
+
 
 class SubscriptionSerializer(serializers.Serializer):
     email = serializers.EmailField()
