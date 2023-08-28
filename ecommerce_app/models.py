@@ -11,13 +11,14 @@ class Country(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='products/')
+    image = models.ImageField(upload_to='products/')  # For regular images
+    svg_image = models.FileField(upload_to='product/', blank=True, null=True)  # For SVG files
     description = models.TextField()
     is_on_sale = models.BooleanField(default=False)
     old_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     new_price = models.DecimalField(max_digits=10, decimal_places=2)
     product_type = models.CharField(max_length=20) 
-    origin_type = models.CharField(max_length=20)  
+    origin_type = models.CharField(max_length=20)
 
 
 class CartItem(models.Model):
@@ -66,7 +67,7 @@ class WishlistItem(models.Model):
     
     class Meta:
         unique_together = ('user', 'product')
-        
+
 
 class Subscription(models.Model):
     email = models.EmailField(unique=True)
