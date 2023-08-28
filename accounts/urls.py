@@ -1,4 +1,4 @@
-from .views import SignUpAPIView, SignInAPIView, ForgotPasswordAPIView, VerifyCodeAPIView, SetNewPasswordAPIView
+from .views import SignUpAPIView, SignInAPIView, ForgotPasswordAPIView, VerifyCodeAPIView, SetNewPasswordAPIView, ChangePasswordView
 from django.urls import path
 
 urlpatterns = [
@@ -8,4 +8,6 @@ urlpatterns = [
     path('api/forgot_password/', ForgotPasswordAPIView.as_view(), name='forgot_password'),
     path('api/verify_code/', VerifyCodeAPIView.as_view(), name='verify_code'),
     path('api/setnew_password/', SetNewPasswordAPIView.as_view(), name='setnew_password'),
+    path('api/change_password/', ChangePasswordView.as_view(), name='change_password'),
 ]
+

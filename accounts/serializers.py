@@ -77,3 +77,11 @@ class SetNewPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"password": "Password fields didn't match."})
         return attrs
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)

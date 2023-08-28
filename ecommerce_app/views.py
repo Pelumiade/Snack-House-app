@@ -105,18 +105,29 @@ class OrderView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class DeliveryDetailsView(APIView):
-    serializer_class = DeliveryDetailsSerializer
+# class DeliveryDetailsView(APIView):
+#     serializer_class = DeliveryDetailsSerializer
+#     def post(self, request, *args, **kwargs):
+#         user = request.user
+#         serializer = DeliveryDetailsSerializer(data=request.data)
+
+#         if serializer.is_valid():
+#             serializer.save(user=user)
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DeliveryDetailsAPIView(APIView):
+    serializer_class = DeliveryDetails
+    #permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
-        user = request.user
         serializer = DeliveryDetailsSerializer(data=request.data)
-
         if serializer.is_valid():
-            serializer.save(user=user)
+            serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ShippingMethodOptionsView(APIView):
     serializer_class = ShippingMethodSerializer
@@ -177,6 +188,7 @@ class RemoveFromWishlistAPIView(APIView):
 
 class SubscribeAPIView(APIView):
     serializer_class = SubscriptionSerializer
+    
     permission_classes=[]
     def post(self, request, *args, **kwargs):
         serializer = SubscriptionSerializer(data=request.data)
