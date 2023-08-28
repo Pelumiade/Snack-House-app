@@ -121,7 +121,7 @@ class DeliveryDetailsView(APIView):
 class ShippingMethodOptionsView(APIView):
     serializer_class = ShippingMethodSerializer
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         shipping_methods = ShippingMethod.objects.all()
 
         serializer = ShippingMethodSerializer(shipping_methods, many=True)
@@ -143,6 +143,7 @@ class PaymentView(APIView):
 
 class AddToWishlistAPIView(APIView):
     serializer_class = WishlistAddSerializer
+
     def post(self, request, *args, **kwargs):
         serializer = WishlistAddSerializer(data=request.data)
         if serializer.is_valid():
@@ -161,6 +162,7 @@ class AddToWishlistAPIView(APIView):
         
 
 class RemoveFromWishlistAPIView(APIView):
+    serializer_class = None
     def post(self, request, *args, **kwargs):
         product_id = request.data.get('product_id')
         
