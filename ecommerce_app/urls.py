@@ -8,6 +8,9 @@ from .views import (
     DeliveryDetailsView,
     ShippingMethodOptionsView,
     PaymentView,
+    SubscribeAPIView,
+    AddToWishlistAPIView,
+    RemoveFromWishlistAPIView
 )
 
 urlpatterns = [
@@ -20,7 +23,11 @@ urlpatterns = [
    # path('delivery_details/<int:pk>/', DeliveryDetailsView.as_view(), name='delivery-details-detail'),
     path('shipping_methods/', ShippingMethodOptionsView.as_view(), name='shipping-methods'),
     path('make_payment/', PaymentView.as_view(), name='make-payment'),
+    path('subscribe/', SubscribeAPIView.as_view(), name='subscribe'),
+    path('wishlist/add/', AddToWishlistAPIView.as_view(), name='add_to_wishlist'),
+    path('wishlist/remove/', RemoveFromWishlistAPIView.as_view(), name='remove_from_wishlist'),
 ]
+
 
 
 

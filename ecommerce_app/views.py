@@ -1,8 +1,9 @@
 from rest_framework import generics, status
-from .models import Product, CartItem, Order, ShippingMethod, DeliveryDetails, Payment
-from .serializers import ProductSerializer, CartItemSerializer, PaymentSerializer, DeliveryDetailsSerializer, ShippingMethodSerializer, OrderSerializer, CartTotalSerializer, SubscriptionSerializer
+from .models import Product, CartItem, Order, ShippingMethod, DeliveryDetails, Payment, Subscription, WishlistItem
+from .serializers import ProductSerializer, CartItemSerializer, PaymentSerializer, DeliveryDetailsSerializer, ShippingMethodSerializer, OrderSerializer, CartTotalSerializer, SubscriptionSerializer, WishlistAddSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from accounts.tasks import send_email
 
 
 class ProductListView(generics.ListAPIView):
@@ -100,7 +101,7 @@ class OrderView(APIView):
         order.items.set(cart_items)  
         cart_items.delete()
 
-        serializer = self.serializer_class(order)  # Use serializer_class
+        serializer = self.serializer_class(order)  
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -140,24 +141,57 @@ class PaymentView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
-
-# class SubscribeAPIView(APIView):
-#     def post(self, request, *args, **kwargs):
-#         serializer = SubscriptionSerializer(data=request.data)
-#         if serializer.is_valid():
-#             email = serializer.validated_data['email']
+class AddToWishlistAPIView(APIView):
+    serializer_class = WishlistAddSerializer
+    def post(self, request, *args, **kwargs):
+        serializer = WishlistAddSerializer(data=request.data)
+        if serializer.is_valid():
+            product_id = serializer.validated_data['product_id']
             
-#             # Save the email to your database
-#             # Assuming you have a Subscription model to store emails
-#             Subscription.objects.create(email=email)
+            wishlist_item, created = WishlistItem.objects.get_or_create(
+                user=request.user, product_id=product_id
+            )
             
-#             # Send a confirmation email
-#             subject = 'Subscription Confirmation'
-#             message = f'Thank you for subscribing to our newsletter! You will receive updates at {email}.'
-#             from_email = 'noreply@example.com'
-#             recipient_list = [email]
-#             send_mail(subject, message, from_email, recipient_list, fail_silently=True)
-            
-#             return Response({'message': 'Subscription successful. Thank you for subscribing!'}, status=status.HTTP_201_CREATED)
+            if created:
+                return Response({'message': 'Item added to wishlist'}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'message': 'Item is already in wishlist'}, status=status.HTTP_200_OK)
         
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class RemoveFromWishlistAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        product_id = request.data.get('product_id')
+        
+        
+        try:
+            wishlist_item = WishlistItem.objects.get(user=request.user, product_id=product_id)
+            wishlist_item.delete()
+            return Response({'message': 'Item removed from wishlist'}, status=status.HTTP_204_NO_CONTENT)
+        except WishlistItem.DoesNotExist:
+            return Response({'message': 'Item not found in wishlist'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class SubscribeAPIView(APIView):
+    serializer_class = SubscriptionSerializer
+    permission_classes=[]
+    def post(self, request, *args, **kwargs):
+        serializer = SubscriptionSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            
+            Subscription.objects.create(email=email)
+            
+            email_data = {
+                'email_subject': 'Subscription Confirmation',
+                'email_body': f'Thank you for subscribing to our newsletter! You will receive updates at {email}.',
+                'to_email': email
+            }
+            send_email(email_data)
+            
+            return Response({'message': 'Subscription successful. Thank you for subscribing!'}, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    

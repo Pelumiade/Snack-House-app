@@ -51,7 +51,6 @@ class ForgotPasswordAPIView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data.get('email')
-            print(email)
             try:
                 user = User.objects.filter(email=email).get()
             except User.DoesNotExist:

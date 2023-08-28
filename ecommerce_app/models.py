@@ -24,7 +24,7 @@ class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    
+
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -40,6 +40,7 @@ class ShippingMethod(models.Model):
 
     def __str__(self):
         return self.name
+    
 
 class DeliveryDetails(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -58,6 +59,22 @@ class Payment(models.Model):
     security_code = models.CharField(max_length=4)
 
 
+class WishlistItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'product')
+        
+
+class Subscription(models.Model):
+    email = models.EmailField(unique=True)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+    
 
 # class Category(models.Model):
 #     name = models.CharField(max_length=80, null=True)
