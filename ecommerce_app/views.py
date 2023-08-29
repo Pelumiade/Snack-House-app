@@ -130,19 +130,6 @@ class OrderView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# class DeliveryDetailsView(APIView):
-#     serializer_class = DeliveryDetailsSerializer
-#     def post(self, request, *args, **kwargs):
-#         user = request.user
-#         serializer = DeliveryDetailsSerializer(data=request.data)
-
-#         if serializer.is_valid():
-#             serializer.save(user=user)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class ShippingMethodOptionsView(APIView):
     serializer_class = ShippingMethodSerializer
 
@@ -151,6 +138,7 @@ class ShippingMethodOptionsView(APIView):
 
         serializer = ShippingMethodSerializer(shipping_methods, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
     
 class DeliveryDetailsAPIView(APIView):
     serializer_class=DeliveryDetailsSerializer

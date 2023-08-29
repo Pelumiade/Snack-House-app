@@ -21,6 +21,9 @@ class Product(models.Model):
     product_type = models.CharField(max_length=20) 
     origin_type = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.name
+    
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
