@@ -14,12 +14,13 @@ from pathlib import Path
 from dotenv import load_dotenv
 from decouple import config
 import dj_database_url
-
 import os
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 DATABASE_URL = config('DATABASE_URL')
 
 # Quick-start development settings - unsuitable for production
@@ -31,7 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = []
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -45,9 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'corsheaders',
-
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
