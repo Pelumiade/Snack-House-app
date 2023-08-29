@@ -9,10 +9,11 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
+
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='products/')  # For regular images
-    svg_image = models.FileField(upload_to='product/', blank=True, null=True)  # For SVG files
+    image = models.ImageField(upload_to='products/')  
+    svg_image = models.FileField(upload_to='product/', blank=True, null=True)  
     description = models.TextField()
     is_on_sale = models.BooleanField(default=False)
     old_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -51,6 +52,7 @@ class DeliveryDetails(models.Model):
     address = models.TextField()
     apartment = models.CharField(max_length=20)
     #shipping_method = models.ForeignKey(ShippingMethod, on_delete=models.CASCADE)
+
 
 class Payment(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

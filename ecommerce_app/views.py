@@ -4,27 +4,24 @@ from .serializers import ProductSerializer, CartItemSerializer, PaymentSerialize
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from accounts.tasks import send_email
-
+from rest_framework.permissions import IsAuthenticated
 
 class ProductListView(generics.ListAPIView):
+    permission_classes = []
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
 
 
 class LowestPriceProductsAPIView(generics.ListAPIView):
+    permission_classes = []
     serializer_class = ProductSerializer
+
     def get(self, request, *args, **kwargs):
-        # Query the database to get the two products with the lowest price
         products = Product.objects.order_by('new_price')[:2]
-        
-        # Serialize the products
         serializer = ProductSerializer(products, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-
-
-
 
 class AddToCartView(APIView):
     serializer_class = CartItemSerializer 
@@ -132,17 +129,8 @@ class OrderView(APIView):
 #         else:
 #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class DeliveryDetailsAPIView(APIView):
-    serializer_class = DeliveryDetails
-    #permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        serializer = DeliveryDetailsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ShippingMethodOptionsView(APIView):
     serializer_class = ShippingMethodSerializer
@@ -153,7 +141,20 @@ class ShippingMethodOptionsView(APIView):
         serializer = ShippingMethodSerializer(shipping_methods, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    
+class DeliveryDetailsAPIView(APIView):
+    serializer_class=DeliveryDetailsSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = DeliveryDetailsSerializer(data=request.data)
+
+        if serializer.is_valid():
+            delivery = serializer.save
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+  
 class PaymentView(APIView):
     serializer_class=PaymentSerializer
     def post(self, request, *args, **kwargs):

@@ -32,13 +32,11 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class DeliveryDetailsSerializer(serializers.ModelSerializer):
-    country = CountrySerializer()
+    country = serializers.CharField(source='country.country_name')
 
     class Meta:
         model = DeliveryDetails
-        fields = ('id', 'user', 'country', 'first_name', 'last_name', 'address', 'apartment')
-
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+        fields = ('id', 'country', 'first_name', 'last_name', 'address', 'apartment')
 
 
 class ShippingMethodSerializer(serializers.ModelSerializer):
