@@ -11,6 +11,21 @@ class ProductListView(generics.ListAPIView):
     queryset = Product.objects.all()
 
 
+class LowestPriceProductsAPIView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    def get(self, request, *args, **kwargs):
+        # Query the database to get the two products with the lowest price
+        products = Product.objects.order_by('new_price')[:2]
+        
+        # Serialize the products
+        serializer = ProductSerializer(products, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+
+
 class AddToCartView(APIView):
     serializer_class = CartItemSerializer 
 
@@ -188,7 +203,7 @@ class RemoveFromWishlistAPIView(APIView):
 
 class SubscribeAPIView(APIView):
     serializer_class = SubscriptionSerializer
-    
+
     permission_classes=[]
     def post(self, request, *args, **kwargs):
         serializer = SubscriptionSerializer(data=request.data)

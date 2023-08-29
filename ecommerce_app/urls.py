@@ -10,11 +10,13 @@ from .views import (
     PaymentView,
     SubscribeAPIView,
     AddToWishlistAPIView,
-    RemoveFromWishlistAPIView
+    RemoveFromWishlistAPIView,
+    LowestPriceProductsAPIView
 )
 
 urlpatterns = [
     path('products/', ProductListView.as_view(), name='product-list'),
+    path('products/lowest-price/', LowestPriceProductsAPIView.as_view(), name='lowest_price_products'),
     path('add_to_cart/', AddToCartView.as_view(), name='add-to-cart'),
     path('remove_from_cart/', RemoveFromCartView.as_view(), name='remove-from-cart'),
     path('cart_total/', CartTotalView.as_view(), name='cart-total'),
