@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from accounts.tasks import send_email
 from rest_framework.permissions import IsAuthenticated
 
+
 class ProductListView(generics.ListAPIView):
     permission_classes = []
     serializer_class = ProductSerializer
@@ -22,6 +23,18 @@ class LowestPriceProductsAPIView(generics.ListAPIView):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+class FeaturedProductsAPIView(generics.ListAPIView):
+    permission_classes = []
+    serializer_class = ProductSerializer
+
+    def get(self, request, *args, **kwargs):
+        products = Product.objects.order_by('origin_type')[:6]
+        serializer = ProductSerializer(products, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
 
 class AddToCartView(APIView):
     serializer_class = CartItemSerializer 
@@ -128,8 +141,6 @@ class OrderView(APIView):
 #             return Response(serializer.data, status=status.HTTP_201_CREATED)
 #         else:
 #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 class ShippingMethodOptionsView(APIView):

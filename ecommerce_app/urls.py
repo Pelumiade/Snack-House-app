@@ -11,12 +11,13 @@ from .views import (
     SubscribeAPIView,
     AddToWishlistAPIView,
     RemoveFromWishlistAPIView,
-    LowestPriceProductsAPIView
+    LowestPriceProductsAPIView,
+    FeaturedProductsAPIView
 )
 
 urlpatterns = [
     path('products/', ProductListView.as_view(), name='product-list'),
-    path('products/lowest-price/', LowestPriceProductsAPIView.as_view(), name='lowest_price_products'),
+    path('best_seller/', LowestPriceProductsAPIView.as_view(), name='best_seller'),
     path('add_to_cart/', AddToCartView.as_view(), name='add-to-cart'),
     path('remove_from_cart/', RemoveFromCartView.as_view(), name='remove-from-cart'),
     path('cart_total/', CartTotalView.as_view(), name='cart-total'),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('subscribe/', SubscribeAPIView.as_view(), name='subscribe'),
     path('wishlist/add/', AddToWishlistAPIView.as_view(), name='add_to_wishlist'),
     path('wishlist/remove/', RemoveFromWishlistAPIView.as_view(), name='remove_from_wishlist'),
+    path('featured_product/', FeaturedProductsAPIView.as_view(), name='featured_product'),
 ]
 
 
