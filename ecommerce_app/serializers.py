@@ -7,9 +7,14 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
+class ProductCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('name', 'image', 'new_price')
+
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+    product = ProductCartSerializer()
     item_price = serializers.SerializerMethodField() 
 
     class Meta:
