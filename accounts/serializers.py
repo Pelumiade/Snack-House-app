@@ -6,6 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.validators import UniqueValidator
 
 
+
 class SignUpSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True,
