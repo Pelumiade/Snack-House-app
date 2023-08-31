@@ -22,7 +22,6 @@ class SignUpAPIView(CreateAPIView):
             user = serializer.save()
             return Response({'message': 'Account Succesfully Created'}, status=status.HTTP_201_CREATED)
         
-
         # Check if the email error exists in the serializer errors
         error_message = serializer.errors.get('email', 'An account with this email already exists.')
         return Response({'error': error_message}, status=status.HTTP_400_BAD_REQUEST)
@@ -144,3 +143,6 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    
