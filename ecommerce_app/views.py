@@ -1,6 +1,6 @@
 from rest_framework import generics, status
 from .models import Product, CartItem, Order, ShippingMethod, DeliveryDetails, Payment, Subscription, WishlistItem
-from .serializers import ProductSerializer, CartItemSerializer, PaymentSerializer, DeliveryDetailsSerializer, ShippingMethodSerializer, OrderSerializer, CartTotalSerializer, SubscriptionSerializer, WishlistAddSerializer
+from .serializers import ProductSerializer, CartItemSerializer, PaymentSerializer, DeliveryDetailsSerializer, ShippingMethodSerializer, OrderSerializer, CartTotalSerializer, SubscriptionSerializer, WishlistAddSerializer, CartItemListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from accounts.tasks import send_email
@@ -8,13 +8,13 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class ProductListView(generics.ListAPIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
 
 
 class LowestPriceProductsAPIView(generics.ListAPIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = ProductSerializer
 
     def get(self, request, *args, **kwargs):
@@ -25,7 +25,7 @@ class LowestPriceProductsAPIView(generics.ListAPIView):
     
 
 class FeaturedProductsAPIView(generics.ListAPIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = ProductSerializer
 
     def get(self, request, *args, **kwargs):
@@ -37,7 +37,7 @@ class FeaturedProductsAPIView(generics.ListAPIView):
 
 class AddToCartView(APIView):
     serializer_class = CartItemSerializer 
-    permission_classes = [] 
+    permission_classes = [IsAuthenticated] 
 
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -62,11 +62,20 @@ class AddToCartView(APIView):
         else:
             cart_item.delete()
             return Response({"detail": "Item removed from cart"}, status=status.HTTP_204_NO_CONTENT)
-      
+        
+
+class ListCartItemsView(generics.ListAPIView):
+    serializer_class = CartItemListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return CartItem.objects.filter(user=user)
+
 
 class RemoveFromCartView(APIView):
     serializer_class = None 
-    permission_classes = [] 
+    permission_classes = [IsAuthenticated] 
 
 
     def post(self, request, *args, **kwargs):
@@ -106,7 +115,7 @@ class RemoveFromCartView(APIView):
 
 class CartTotalView(APIView):
     serializer_class = CartTotalSerializer 
-    permission_classes = [] 
+    permission_classes = [IsAuthenticated] 
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -120,7 +129,7 @@ class CartTotalView(APIView):
 
 class OrderView(APIView):
     serializer_class = OrderSerializer 
-    permission_classes = [] 
+    permission_classes = [IsAuthenticated] 
  
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -136,7 +145,7 @@ class OrderView(APIView):
 
 class ShippingMethodOptionsView(APIView):
     serializer_class = ShippingMethodSerializer
-    permission_classes = [] 
+    permission_classes = [IsAuthenticated] 
 
     def post(self, request, *args, **kwargs):
         shipping_methods = ShippingMethod.objects.all()
@@ -147,7 +156,7 @@ class ShippingMethodOptionsView(APIView):
     
 class DeliveryDetailsAPIView(APIView):
     serializer_class=DeliveryDetailsSerializer
-    permission_classes = [] 
+    permission_classes = [IsAuthenticated] 
 
     def post(self, request, *args, **kwargs):
         serializer = DeliveryDetailsSerializer(data=request.data)
@@ -162,7 +171,7 @@ class DeliveryDetailsAPIView(APIView):
   
 class PaymentView(APIView):
     serializer_class=PaymentSerializer
-    permission_classes = [] 
+    permission_classes = [IsAuthenticated] 
 
     def post(self, request, *args, **kwargs):
         serializer = PaymentSerializer(data=request.data)
@@ -177,7 +186,7 @@ class PaymentView(APIView):
 
 class AddToWishlistAPIView(APIView):
     serializer_class = WishlistAddSerializer
-    permission_classes = [] 
+    permission_classes = [IsAuthenticated] 
 
 
     def post(self, request, *args, **kwargs):
@@ -199,7 +208,7 @@ class AddToWishlistAPIView(APIView):
 
 class RemoveFromWishlistAPIView(APIView):
     serializer_class = None
-    permission_classes = [] 
+    permission_classes = [IsAuthenticated] 
 
     def post(self, request, *args, **kwargs):
         product_id = request.data.get('product_id')

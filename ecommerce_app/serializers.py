@@ -35,6 +35,25 @@ class CartItemSerializer(serializers.ModelSerializer):
         return obj.product.new_price * obj.quantity
     
 
+class CartItemListSerializer(serializers.ModelSerializer):
+    product = serializers.SerializerMethodField()
+    item_price = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CartItem
+        fields = ('product', 'quantity', 'item_price')
+
+    def get_product(self, obj):
+        return {
+            'name': obj.product.name,
+            'image': obj.product.image.url,
+            'new_price': obj.product.new_price,
+        }
+
+    def get_item_price(self, obj):
+        return obj.product.new_price * obj.quantity
+    
+
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
