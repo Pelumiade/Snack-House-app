@@ -1,6 +1,6 @@
 from rest_framework import generics, status
 from .models import Product, CartItem, Order, ShippingMethod, DeliveryDetails, Payment, Subscription, WishlistItem
-from .serializers import ProductSerializer, CartItemSerializer, PaymentSerializer, DeliveryDetailsSerializer, ShippingMethodSerializer, OrderSerializer, CartTotalSerializer, SubscriptionSerializer, WishlistAddSerializer, CartItemListSerializer
+from .serializers import ProductSerializer, CartItemSerializer, PaymentSerializer, DeliveryDetailsSerializer, ShippingMethodSerializer, OrderSerializer, CartTotalSerializer, SubscriptionSerializer, WishlistAddSerializer, CartItemListSerializer, RemoveCartItemSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from accounts.tasks import send_email
@@ -74,26 +74,20 @@ class ListCartItemsView(generics.ListAPIView):
 
 
 class RemoveFromCartView(APIView):
-    serializer_class = None 
-    permission_classes = [IsAuthenticated] 
+    serializer_class = RemoveCartItemSerializer
+    permission_classes = [IsAuthenticated]
 
-
-    def post(self, request, *args, **kwargs):
-        user = request.user
-        product_id = request.data.get("product_id")
-
+    def post(self, request, product_id):
         try:
-            product = Product.objects.get(pk=product_id)
-        except Product.DoesNotExist:
-            return Response({"detail": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
-
-        try:
-            cart_item = CartItem.objects.get(user=user, product=product)
+            product = Product.objects.get(id=product_id)
+            cart_item = CartItem.objects.get(product=product, user=request.user)
             cart_item.delete()
-            return Response({"detail": "Item removed from cart"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'detail': 'Item removed from cart'}, status=status.HTTP_204_NO_CONTENT)
+        except Product.DoesNotExist:
+            return Response({'detail': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
         except CartItem.DoesNotExist:
-            return Response({"detail": "Item not found in cart"}, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response({'detail': 'Cart item not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 # class RemoveFromCartView(APIView):
 #     def post(self, request, pk, id, *args, **kwargs):
