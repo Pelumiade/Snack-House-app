@@ -96,8 +96,8 @@ class WishlistAddSerializer(serializers.Serializer):
 
 class SubscriptionSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
     
-    
-class RemoveFromCartSerializer(serializers.Serializer):
+class RemoveCartItemSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
 
