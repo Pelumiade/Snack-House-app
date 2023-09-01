@@ -77,7 +77,7 @@ class RemoveFromCartView(APIView):
     serializer_class = RemoveCartItemSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, product_id):
+    def post(self, request, product_id):  # Define product_id as an argument here
         try:
             product = Product.objects.get(id=product_id)
             cart_item = CartItem.objects.get(product=product, user=request.user)
@@ -87,8 +87,9 @@ class RemoveFromCartView(APIView):
             return Response({'detail': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
         except CartItem.DoesNotExist:
             return Response({'detail': 'Cart item not found'}, status=status.HTTP_404_NOT_FOUND)
+        
 
-
+        
 # class RemoveFromCartView(APIView):
 #     def post(self, request, pk, id, *args, **kwargs):
 #         if request.user.id != pk:
