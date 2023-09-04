@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 from decouple import config
 import dj_database_url
 import os
+from datetime import timedelta
 
 load_dotenv()
 
@@ -187,6 +188,14 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=14),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=15),
+    'SLIDING_TOKEN_REFRESH_LIFETIME_GRACE_PERIOD': timedelta(days=1),
+}
+
 
 
 SPECTACULAR_SETTINGS = {
