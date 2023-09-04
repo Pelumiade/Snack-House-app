@@ -37,11 +37,12 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 class CartItemListSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
-    item_price = serializers.SerializerMethodField()
+    #item_price = serializers.SerializerMethodField()
+    item_price = serializers.DecimalField(10, 2, default=0.0)
 
     class Meta:
         model = CartItem
-        fields = ('product', 'quantity', 'item_price')
+        fields = ('id', 'product', 'quantity', 'item_price')
 
     def get_product(self, obj):
         return {
@@ -52,6 +53,26 @@ class CartItemListSerializer(serializers.ModelSerializer):
 
     def get_item_price(self, obj):
         return obj.product.new_price * obj.quantity
+    
+    
+# class CartItemListSerializer(serializers.ModelSerializer):
+#     product = serializers.SerializerMethodField() 
+#     product_id = serializers.IntegerField(write_only=True)
+#     item_price = serializers.DecimalField(10, 2, default=0.0)
+
+#     class Meta:
+#         model = CartItem
+#         fields = ('product', 'product_id', 'quantity', 'item_price')
+
+#     def get_product(self, obj):
+#         return {
+#             'name': obj.product.name,
+#             'image': obj.product.image.url, 
+#             'new_price': obj.product.new_price,
+#         }
+
+#     def get_item_price(self, obj):
+#         return obj.product.new_price * obj.quantity
     
 
 class CountrySerializer(serializers.ModelSerializer):
