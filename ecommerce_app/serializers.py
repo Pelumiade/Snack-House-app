@@ -37,21 +37,21 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 class CartItemListSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
-    #item_price = serializers.SerializerMethodField()
-    item_price = serializers.DecimalField(10, 2, default=0.0)
+    item_price = serializers.SerializerMethodField()
+    # item_price = serializers.DecimalField(10, 2, default=0.0)
 
     class Meta:
         model = CartItem
         fields = ('id', 'product', 'quantity', 'item_price')
 
-    def get_product(self, obj):
+    def get_product(self, obj: CartItem) -> Dict[str, Any]:
         return {
             'name': obj.product.name,
             'image': obj.product.image.url,
             'new_price': obj.product.new_price,
         }
 
-    def get_item_price(self, obj):
+    def get_item_price(self, obj: CartItem) -> float:
         return obj.product.new_price * obj.quantity
     
     

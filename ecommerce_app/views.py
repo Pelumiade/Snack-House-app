@@ -65,6 +65,7 @@ class AddToCartView(APIView):
         
 
 class ListCartItemsView(generics.ListAPIView):
+    
     serializer_class = CartItemListSerializer
     permission_classes = [IsAuthenticated]
 
@@ -88,8 +89,22 @@ class RemoveFromCartView(APIView):
         except CartItem.DoesNotExist:
             return Response({'detail': 'Cart item not found'}, status=status.HTTP_404_NOT_FOUND)
         
+# class RemoveFromCartView(APIView):
+#     serializer_class = [RemoveCartItemSerializer]
+#     permission_classes = [IsAuthenticated]
 
-        
+#     def post(self, request, *args, **kwargs):
+#         user = request.user
+#         product_id = request.data.get("product_id")
+
+#         try:
+#             cart_item = CartItem.objects.get(user=user, product_id=product_id)
+#         except CartItem.DoesNotExist:
+#             return Response({"detail": "Item not found in cart"}, status=status.HTTP_404_NOT_FOUND)
+
+#         cart_item.delete()
+#         return Response({"detail": "Item removed from cart"}, status=status.HTTP_204_NO_CONTENT)
+
 # class RemoveFromCartView(APIView):
 #     def post(self, request, pk, id, *args, **kwargs):
 #         if request.user.id != pk:
