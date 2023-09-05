@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Product, CartItem, Order, ShippingMethod, DeliveryDetails, Payment, Country
 from typing import Dict, Any
 
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
