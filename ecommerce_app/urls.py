@@ -31,6 +31,7 @@ urlpatterns = [
     path('subscribe/', SubscribeAPIView.as_view(), name='subscribe'),
     path('wishlist/add/', AddToWishlistAPIView.as_view(), name='add_to_wishlist'),
     path('list-cart-items/', ListCartItemsView.as_view(), name='list-cart-items'),
+    path('list-wishlist-items/', ListCartItemsView.as_view(), name='list-wishlist-items'),
     path('wishlist/remove/', RemoveFromWishlistAPIView.as_view(), name='remove_from_wishlist'),
     path('featured_product/', FeaturedProductsAPIView.as_view(), name='featured_product'),
 ]

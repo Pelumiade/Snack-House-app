@@ -77,6 +77,28 @@ class ListCartItemsView(generics.ListAPIView):
         return CartItem.objects.filter(user=user)
 
 
+# class RemoveFromCartView(APIView):
+#     serializer_class = RemoveCartItemSerializer
+#     permission_classes = [IsAuthenticated] 
+
+#     def post(self, request, *args, **kwargs):
+#         user = request.user
+#         serializer = self.serializer_class(data=request.data)
+
+#         if serializer.is_valid():
+#             product_id = serializer.validated_data["product_id"]
+
+#             try:
+#                 cart_item = CartItem.objects.get(user=user, product_id=product_id)
+#                 cart_item.delete()
+#                 return Response({"detail": "Item removed from cart"}, status=status.HTTP_204_NO_CONTENT)
+#             except CartItem.DoesNotExist:
+#                 return Response({"detail": "Item not found in cart"}, status=status.HTTP_404_NOT_FOUND)
+        
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
 class RemoveFromCartView(APIView):
     serializer_class = RemoveCartItemSerializer
     permission_classes = [IsAuthenticated] 
@@ -91,11 +113,12 @@ class RemoveFromCartView(APIView):
             try:
                 cart_item = CartItem.objects.get(user=user, product_id=product_id)
                 cart_item.delete()
-                return Response({"detail": "Item removed from cart"}, status=status.HTTP_204_NO_CONTENT)
+                return Response({"detail": "Item removed from cart successfully"}, status=status.HTTP_204_NO_CONTENT)
             except CartItem.DoesNotExist:
                 return Response({"detail": "Item not found in cart"}, status=status.HTTP_404_NOT_FOUND)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # class RemoveFromCartView(APIView):
 #     serializer_class = RemoveCartItemSerializer
@@ -237,22 +260,53 @@ class AddToWishlistAPIView(APIView):
                 return Response({'message': 'Item is already in wishlist'}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
 
 class RemoveFromWishlistAPIView(APIView):
-    serializer_class = None
+    serializer_class = RemoveCartItemSerializer
     permission_classes = [IsAuthenticated] 
 
     def post(self, request, *args, **kwargs):
-        product_id = request.data.get('product_id')
+        user = request.user
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            product_id = serializer.validated_data["product_id"]
+
+            try:
+                wishlist_item = WishlistItem.objects.get(user=user, product_id=product_id)
+                wishlist_item.delete()
+                return Response({"detail": "Item removed from wishlist successfully"}, status=status.HTTP_204_NO_CONTENT)
+            except WishlistItem.DoesNotExist:
+                return Response({"detail": "Item not found in wishlist"}, status=status.HTTP_404_NOT_FOUND)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 
+
+class ListWishListView(generics.ListAPIView):
+    
+    serializer_class = WishlistAddSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return WishlistItem.objects.filter(user=user)
+
+# class RemoveFromWishlistAPIView(APIView):
+#     serializer_class = RemoveCartItemSerializer
+#     permission_classes = [IsAuthenticated] 
+
+#     def post(self, request, *args, **kwargs):
+#         product_id = request.data.get('product_id')
         
         
-        try:
-            wishlist_item = WishlistItem.objects.get(user=request.user, product_id=product_id)
-            wishlist_item.delete()
-            return Response({'message': 'Item removed from wishlist'}, status=status.HTTP_204_NO_CONTENT)
-        except WishlistItem.DoesNotExist:
-            return Response({'message': 'Item not found in wishlist'}, status=status.HTTP_404_NOT_FOUND)
+#         try:
+#             wishlist_item = WishlistItem.objects.get(user=request.user, product_id=product_id)
+#             wishlist_item.delete()
+#             return Response({'message': 'Item removed from wishlist'}, status=status.HTTP_204_NO_CONTENT)
+#         except WishlistItem.DoesNotExist:
+#             return Response({'message': 'Item not found in wishlist'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class SubscribeAPIView(APIView):

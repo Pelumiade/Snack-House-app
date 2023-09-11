@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, CartItem, Order, ShippingMethod, DeliveryDetails, Payment, Country
+from .models import Product, CartItem, Order, ShippingMethod, DeliveryDetails, Payment, Country, WishlistItem
 from typing import Dict, Any
 
 
@@ -113,7 +113,19 @@ class CartTotalSerializer(serializers.Serializer):
 
 
 class WishlistAddSerializer(serializers.Serializer):
+    product = serializers.SerializerMethodField() 
     product_id = serializers.IntegerField()
+
+    class Meta:
+        model = WishlistItem
+        fields = ('product', 'product_id')
+        
+    def get_product(self, obj: WishlistItem) -> Dict[str, Any]:
+        return {
+            'name': obj.product.name,
+            'image': obj.product.image.url,
+            'new_price': obj.product.new_price,
+        }
 
 
 class SubscriptionSerializer(serializers.Serializer):
