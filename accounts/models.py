@@ -1,10 +1,7 @@
 from django.db import models
-
-# Create your models here.
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin)
 from base.managers import MyUserManager, ActiveManager
 from phonenumber_field.modelfields import PhoneNumberField
-
 
 class User(AbstractBaseUser, PermissionsMixin):
     """ Custom user model that supports using email instead of username"""
